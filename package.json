@@ -1,0 +1,16 @@
+{
+  "name": "meriem-hamri-portfolio",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "npm@11.6.2",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @meriem/web",
+    "dev:web": "npm run dev --workspace @meriem/web",
+    "build": "npm run build --workspace @meriem/web",
+    "lint": "npm run lint --workspace @meriem/web",
+    "typecheck": "npm run typecheck --workspace @meriem/web"
+  }
+}

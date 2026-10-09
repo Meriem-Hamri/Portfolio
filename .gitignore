@@ -1,0 +1,21 @@
+# dependencies
+node_modules/
+.npm-cache/
+
+# Next.js
+.next/
+out/
+
+# local environment
+.env
+.env.*
+!.env.example
+
+# tooling
+*.tsbuildinfo
+.eslintcache
+.DS_Store
+Thumbs.db
+
+# temporary research checkout
+.research-rag/
