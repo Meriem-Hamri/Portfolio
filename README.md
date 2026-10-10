@@ -2,6 +2,8 @@
 
 Première version publique du portfolio software engineer de Meriem Hamri.
 
+La page d'accueil présente les deux stages (Telepac Technology et TGR), suivis de Skilo, TaskFlow et XploreIA. Les pages publiques existent en français et en anglais ; le sélecteur EN/FR conserve le choix dans le navigateur. Le contrôle clair/nuit conserve également sa préférence.
+
 ## Structure
 
 - `apps/web` : application publique Next.js, React, TypeScript et Tailwind CSS.

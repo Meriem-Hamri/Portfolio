@@ -6,6 +6,9 @@ export type ProjectSection = {
 };
 
 export type Project = {
+  kind: "internship" | "collaboration" | "personal";
+  organization: string | null;
+  period: string | null;
   slug: string;
   title: string;
   eyebrow: string;

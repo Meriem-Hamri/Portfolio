@@ -1,47 +1,25 @@
 import type { Metadata } from "next";
 import { ArrowLink } from "@/components/arrow-link";
-import { ProjectVisual } from "@/components/project-visual";
 import { getProjects } from "@/lib/projects";
+import { getLocale, pick } from "@/lib/locale";
 
-export const metadata: Metadata = {
-  title: "Projets",
-  description: "Les projets logiciels sélectionnés de Meriem Hamri.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  return { title: pick(locale, "Projets", "Work"), description: pick(locale, "Stages et projets logiciels de Meriem Hamri.", "Meriem Hamri's internships and software projects.") };
+}
 
 export default async function WorkPage() {
-  const projects = await getProjects();
-
-  return (
-    <section className="work-page">
-      <div className="shell">
-        <header className="page-intro page-intro--work">
-          <p className="eyebrow">Projets sélectionnés</p>
-          <h1>Comprendre le besoin,<br />puis montrer la construction.</h1>
-          <p>Chaque entrée distingue les faits vérifiés des informations encore à réunir. Aucun résultat, visuel ou rôle n’est supposé.</p>
-        </header>
-
-        <div className="work-index">
-          {projects.map((project, index) => (
-            <article className="work-row" key={project.slug}>
-              <div className="work-row__number">0{index + 1}</div>
-              <div className="work-row__visual">
-                <ProjectVisual kind={project.slug === "reporting-cse" ? "reporting" : "rag"} compact />
-              </div>
-              <div className="work-row__content">
-                <div className="work-row__topline">
-                  <p className="eyebrow">{project.eyebrow}</p>
-                  <span className={`status status--${project.status}`}>
-                    {project.status === "documented" ? "Dépôt consulté" : "À compléter"}
-                  </span>
-                </div>
-                <h2>{project.title}</h2>
-                <p>{project.summary}</p>
-                <ArrowLink href={`/work/${project.slug}`}>Ouvrir le projet</ArrowLink>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+  const locale = await getLocale();
+  const projects = await getProjects(locale);
+  const internships = projects.filter(project => project.kind === "internship");
+  const other = projects.filter(project => project.kind !== "internship");
+  return <section className="work-page"><div className="shell">
+    <header className="page-intro page-intro--work"><p className="eyebrow">{pick(locale, "Portfolio", "Portfolio")}</p><h1>{pick(locale, "Des projets.", "Projects.")}<br />{pick(locale, "Des contextes réels.", "Real contexts.")}</h1><p>{pick(locale, "Deux stages en entreprise, puis des projets menés en équipe ou en autonomie. Chaque étude distingue ce qui est vérifié de ce qui reste à montrer.", "Two industry internships, followed by team and independent projects. Each case study separates verified facts from material still to be shown.")}</p></header>
+    <div className="work-group"><p className="eyebrow">{pick(locale, "Expérience en entreprise", "Industry experience")}</p>
+      {internships.map((project,index) => <article className="work-feature" key={project.slug}><div className="work-feature__index">0{index + 1} / {project.year}</div><div><p>{project.organization}</p><h2>{project.title}</h2><p>{project.summary}</p><ul className="tech-line">{project.stack.slice(0,4).map(tech => <li key={tech}>{tech}</li>)}</ul><ArrowLink href={`/work/${project.slug}`}>{pick(locale, "Lire l’étude de cas", "Read the case study")}</ArrowLink></div></article>)}
+    </div>
+    <div className="work-group work-group--other"><p className="eyebrow">{pick(locale, "Projets d’équipe et personnels", "Team and independent projects")}</p>
+      {other.map((project,index) => <article className="work-feature" key={project.slug}><div className="work-feature__index">0{index + 3}</div><div><p>{project.eyebrow}</p><h2>{project.title}</h2><p>{project.summary}</p><ArrowLink href={`/work/${project.slug}`}>{pick(locale, "Découvrir", "Explore")}</ArrowLink></div></article>)}
+    </div>
+  </div></section>;
 }

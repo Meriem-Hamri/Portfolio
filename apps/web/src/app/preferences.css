@@ -1,0 +1,59 @@
+.preferences { display: flex; align-items: center; gap: .25rem; margin-left: 1.5rem; }
+.preference-button { min-width: 2.5rem; min-height: 2.5rem; border: 1px solid var(--line); background: transparent; color: var(--cacao); cursor: pointer; font: 700 .72rem var(--font-sans),Arial,sans-serif; letter-spacing: .04em; }
+.preference-button:last-child { font-size: 1.25rem; line-height: 1; }
+.preference-button:hover { background: var(--glacier); color: var(--indigo); }
+.preference-button:disabled { cursor: wait; opacity: .6; }
+.site-header__inner { gap: 1rem; }
+.preferences { margin-left: auto; order: 2; }
+.main-navigation { margin-left: 0; order: 3; }
+.menu-button { order: 4; }
+.more-work { display: grid; grid-template-columns: minmax(13rem,.65fr) minmax(0,1.35fr); gap: clamp(2rem,6vw,7rem); border-top: 1px solid var(--cacao); padding-top: 4rem; margin-top: 8rem; }
+.more-work__intro h3 { font: 500 clamp(2rem,3.8vw,4rem)/1 var(--font-display),Georgia,serif; letter-spacing: -.04em; }
+.more-work__item { display: grid; grid-template-columns: 2.5rem minmax(0,1fr) 2.5rem; gap: 1rem; border-top: 1px solid var(--cacao); padding: 1.5rem 0; align-items: start; }
+.more-work__item > span { color: var(--framboise); }
+.more-work__item p { margin: 0 0 .6rem; }
+.more-work__item div > p:first-child { text-transform: uppercase; font-size: .66rem; font-weight: 700; letter-spacing: .12em; }
+.more-work__item h4 { font: 500 clamp(2rem,3vw,3rem)/1 var(--font-display),Georgia,serif; margin: .7rem 0; }
+.more-work__item > a { color: var(--cacao); font-size: 1.5rem; text-decoration: none; transition: transform .2s; }
+.more-work__item > a:hover { transform: translate(3px,-3px); }
+.contact-chapter__links { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem 2.5rem; }
+.work-group { padding-block: 3rem; border-top: 1px solid var(--indigo); }
+.work-group--other { margin-top: 5rem; }
+.work-feature { display: grid; grid-template-columns: minmax(10rem,.5fr) minmax(0,1.5fr); gap: 2rem; border-bottom: 1px solid var(--indigo); padding: 3rem 0; }
+.work-feature__index { color: var(--framboise); font: 500 1.5rem var(--font-display),Georgia,serif; }
+.work-feature h2 { font: 500 clamp(2.4rem,5vw,5rem)/1 var(--font-display),Georgia,serif; letter-spacing: -.04em; margin: 1rem 0; }
+.work-feature > div:last-child > p:first-child { text-transform: uppercase; font-size: .75rem; font-weight: 700; letter-spacing: .1em; }
+.work-feature > div:last-child > p:nth-child(3) { max-width: 38rem; }
+.work-feature .tech-line { margin-bottom: 1.5rem; }
+.project-facts div { grid-template-columns: 5.5rem 1fr; }
+.case-live { margin-top: 1.5rem; }
+html[data-theme="dark"] { color-scheme: dark; background: #1c223c; }
+html[data-theme="dark"] body, html[data-theme="dark"] .editorial-hero, html[data-theme="dark"] .site-header, html[data-theme="dark"] .main-navigation, html[data-theme="dark"] .case-hero, html[data-theme="dark"] .case-overview, html[data-theme="dark"] .case-sections, html[data-theme="dark"] .not-found { background: #1c223c; color: var(--nacre); }
+html[data-theme="dark"] .wordmark, html[data-theme="dark"] .main-navigation a, html[data-theme="dark"] .menu-button, html[data-theme="dark"] .preference-button, html[data-theme="dark"] .editorial-name, html[data-theme="dark"] .explore-link, html[data-theme="dark"] .text-link, html[data-theme="dark"] .back-link, html[data-theme="dark"] .case-overview .arrow-link { color: var(--nacre); }
+html[data-theme="dark"] .preference-button { border-color: var(--glacier); }
+html[data-theme="dark"] .preference-button:hover { color: var(--indigo); }
+html[data-theme="dark"] .project-chapter, html[data-theme="dark"] .work-page { background: #43282d; color: var(--nacre); }
+html[data-theme="dark"] .project-chapter .eyebrow, html[data-theme="dark"] .work-page .eyebrow, html[data-theme="dark"] .project-story h3, html[data-theme="dark"] .project-chapter .arrow-link, html[data-theme="dark"] .work-page .arrow-link, html[data-theme="dark"] .more-work__item > a { color: var(--nacre); }
+html[data-theme="dark"] .about-chapter, html[data-theme="dark"] .about-page, html[data-theme="dark"] .stack-section { background: #272f50; color: var(--nacre); }
+html[data-theme="dark"] .about-chapter .eyebrow, html[data-theme="dark"] .about-page .eyebrow, html[data-theme="dark"] .stack-section .eyebrow, html[data-theme="dark"] .about-page .arrow-link { color: var(--glacier); }
+html[data-theme="dark"] .about-manifesto, html[data-theme="dark"] .about-next { background: #b8dde8; color: var(--indigo); }
+html[data-theme="dark"] .about-next .arrow-link { color: var(--indigo); }
+html[data-theme="dark"] .about-notes section, html[data-theme="dark"] .practice, html[data-theme="dark"] .practice li, html[data-theme="dark"] .work-feature, html[data-theme="dark"] .work-group, html[data-theme="dark"] .more-work, html[data-theme="dark"] .more-work__item, html[data-theme="dark"] .case-section, html[data-theme="dark"] .project-facts, html[data-theme="dark"] .project-facts div { border-color: #b8dde888; }
+html[data-theme="dark"] .case-section h2, html[data-theme="dark"] .case-hero h1, html[data-theme="dark"] .case-hero__summary { color: var(--nacre); }
+html[data-theme="dark"] .case-hero .eyebrow, html[data-theme="dark"] .project-facts dt { color: var(--glacier); }
+html[data-theme="dark"] .contact-chapter, html[data-theme="dark"] .contact-page, html[data-theme="dark"] .missing-section, html[data-theme="dark"] .site-footer { background: #161a2e; }
+html[data-theme="dark"] .project-stage { background: var(--glacier); }
+html[data-theme="dark"] .editorial-intro em, html[data-theme="dark"] .hero-kicker, html[data-theme="dark"] .story-number, html[data-theme="dark"] .work-feature__index, html[data-theme="dark"] .more-work__item > span, html[data-theme="dark"] .case-section__number, html[data-theme="dark"] .about-signature { color: var(--petale); }
+html[data-theme="dark"] .site-header { border-bottom-color: #b8dde866; }
+html[data-theme="dark"] .explore-link { background: var(--framboise); }
+html[data-theme="dark"] .reporting-preview { color: var(--indigo); }
+html[data-theme="dark"] .reporting-preview .eyebrow { color: var(--indigo); }
+@media (max-width: 720px) {
+  .site-header__inner { flex-wrap: wrap; }
+  .preferences { margin-left: auto; order: 2; }
+  .menu-button { order: 3; }
+  .main-navigation { order: 4; }
+  .more-work { grid-template-columns: 1fr; gap: 1.5rem; margin-top: 5rem; }
+  .work-feature { grid-template-columns: 1fr; gap: .5rem; }
+}
+@media (prefers-reduced-motion: reduce) { .more-work__item > a { transition: none; } }

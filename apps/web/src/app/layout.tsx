@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import { Bodoni_Moda, DM_Sans } from "next/font/google";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { cookies } from "next/headers";
+import { getLocale } from "@/lib/locale";
 import "./globals.css";
 import "./editorial.css";
+import "./preferences.css";
 
 const bodoni = Bodoni_Moda({
   subsets: ["latin"],
@@ -23,17 +26,19 @@ export const metadata: Metadata = {
     template: "%s · Meriem Hamri",
   },
   description:
-    "Portfolio de Meriem Hamri, étudiante en génie logiciel : projets, démarche et contact.",
+    "Meriem Hamri · Software engineering portfolio · Stages, projets et contact.",
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const locale = await getLocale();
+  const theme = (await cookies()).get("portfolio-theme")?.value === "dark" ? "dark" : "light";
   return (
-    <html lang="fr" className={`${bodoni.variable} ${dmSans.variable}`}>
+    <html lang={locale} data-theme={theme} className={`${bodoni.variable} ${dmSans.variable}`}>
       <body>
-        <a className="skip-link" href="#contenu">Aller au contenu</a>
-        <SiteHeader />
+        <a className="skip-link" href="#contenu">{locale === "fr" ? "Aller au contenu" : "Skip to content"}</a>
+        <SiteHeader locale={locale} theme={theme} />
         <main id="contenu">{children}</main>
-        <SiteFooter />
+        <SiteFooter locale={locale} />
       </body>
     </html>
   );
