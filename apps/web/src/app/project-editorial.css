@@ -1,0 +1,85 @@
+/* A short, solid-colour wipe replaces the previous gradient transition. */
+:root { --palette-hero: #faf3e8; --palette-work: #0e1421; --palette-about: #f3d88f; --palette-contact: #43282d; }
+html[data-theme="dark"] { --palette-hero: #1c223c; --palette-work: #090e18; --palette-about: #272f50; --palette-contact: #161a2e; }
+.color-wipe { position: relative; }
+.color-wipe > .shell { position: relative; z-index: 1; }
+.project-chapter { --wipe-from: var(--palette-hero); }
+.about-chapter { --wipe-from: var(--palette-work); }
+.contact-chapter { --wipe-from: var(--palette-about); }
+html.has-scroll-wipes .color-wipe::before { position: absolute; z-index: 0; inset: 0 0 auto; height: 100svh; background: var(--wipe-from); content: ""; pointer-events: none; transform: scaleX(var(--wipe-remaining, 0)); transform-origin: right center; will-change: transform; }
+.editorial-hero { background: var(--palette-hero); }
+.about-chapter { background: var(--palette-about); }
+.contact-chapter { border-top: 0; background: var(--palette-contact); }
+html[data-theme="dark"] .editorial-hero { background: var(--palette-hero); }
+html[data-theme="dark"] .about-chapter { background: var(--palette-about); }
+html[data-theme="dark"] .contact-chapter { background: var(--palette-contact); }
+
+/* Internship details live in a scoped showcase; this sheet owns chapter colours. */
+.project-chapter {
+  --work-ink: var(--nacre);
+  --work-muted: var(--glacier);
+  --work-rule: #b8dde84d;
+  position: relative;
+  overflow: clip;
+  padding: clamp(4rem, 7vw, 7rem) 0 6rem;
+  background: var(--palette-work);
+  color: var(--nacre);
+}
+.project-chapter .more-work { margin-top: 5rem; border-color: var(--work-rule); }
+.project-chapter .more-work .eyebrow { color: var(--petale); }
+.project-chapter .more-work__intro h3,
+.project-chapter .more-work__item h4,
+.project-chapter .more-work__item > a,
+.project-chapter .arrow-link { color: var(--nacre); }
+.project-chapter .more-work__item { border-color: var(--work-rule); }
+.project-chapter .more-work__item > span,
+.project-chapter .arrow-link__icon { color: var(--petale); }
+.project-chapter .more-work__item p { color: var(--glacier); }
+.project-chapter .section-end-link { border-color: var(--work-rule); }
+html[data-theme="dark"] .project-chapter { background: var(--palette-work); color: var(--nacre); }
+
+.work-page { background: var(--indigo); color: var(--nacre); }
+.work-page .page-intro { border-bottom: 1px solid #b8dde866; }
+.work-page .page-intro .eyebrow { color: var(--petale); }
+.work-page .page-intro > p:last-child { color: var(--glacier); }
+.work-page .work-group,
+.work-page .work-feature { border-color: #b8dde866; }
+.work-page .work-group > .eyebrow { color: var(--petale); }
+.work-page .work-feature__index { color: var(--petale); }
+.work-page .work-feature h2 { color: var(--nacre); }
+.work-page .work-feature > div:last-child > p:first-child { color: var(--glacier); }
+.work-page .arrow-link { color: var(--nacre); }
+.work-page .work-feature__reading { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 3rem; margin: 2.5rem 0; }
+.work-page .work-feature__reading > div { border-top: 1px solid #b8dde866; padding-top: .8rem; }
+.work-page .work-feature__reading span { color: var(--petale); font-size: .68rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.work-page .work-feature__reading p { margin: .7rem 0 0; color: var(--glacier); font-size: .9rem; line-height: 1.55; }
+.work-page .tech-line { color: var(--nacre); }
+.stack-section { background: var(--indigo); color: var(--nacre); }
+.stack-section .eyebrow { color: var(--petale); }
+.stack-section li { border-color: #b8dde866; }
+.stack-section li strong { display: block; font-size: 1rem; }
+.stack-section li span { display: block; margin-top: .25rem; color: var(--glacier); font-size: .83rem; }
+html[data-theme="dark"] .work-page,
+html[data-theme="dark"] .stack-section { background: var(--cacao); color: var(--nacre); }
+html[data-theme="dark"] .work-page .page-intro,
+html[data-theme="dark"] .work-page .work-group,
+html[data-theme="dark"] .work-page .work-feature,
+html[data-theme="dark"] .work-page .work-feature__reading > div,
+html[data-theme="dark"] .stack-section li { border-color: #eabac977; }
+html[data-theme="dark"] .work-page .page-intro .eyebrow,
+html[data-theme="dark"] .work-page .work-group > .eyebrow,
+html[data-theme="dark"] .work-page .work-feature__index,
+html[data-theme="dark"] .work-page .work-feature__reading span,
+html[data-theme="dark"] .stack-section .eyebrow { color: var(--petale); }
+html[data-theme="dark"] .work-page .work-feature h2,
+html[data-theme="dark"] .work-page .arrow-link { color: var(--nacre); }
+html[data-theme="dark"] .work-page .page-intro > p:last-child,
+html[data-theme="dark"] .work-page .work-feature > div:last-child > p:first-child,
+html[data-theme="dark"] .work-page .work-feature__reading p,
+html[data-theme="dark"] .stack-section li span { color: var(--glacier); }
+html[data-theme="dark"] .work-page .tech-line { color: var(--nacre); }
+
+@media (max-width: 720px) {
+  .project-chapter { padding-block: 3.5rem 5rem; }
+  .work-page .work-feature__reading { grid-template-columns: 1fr; }
+}

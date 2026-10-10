@@ -4,9 +4,12 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { cookies } from "next/headers";
 import { getLocale } from "@/lib/locale";
+import { getProjects } from "@/lib/projects";
 import "./globals.css";
 import "./editorial.css";
 import "./preferences.css";
+import "./project-editorial.css";
+import "./navigation-editorial.css";
 
 const bodoni = Bodoni_Moda({
   subsets: ["latin"],
@@ -31,12 +34,13 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const locale = await getLocale();
+  const projects = await getProjects(locale);
   const theme = (await cookies()).get("portfolio-theme")?.value === "dark" ? "dark" : "light";
   return (
     <html lang={locale} data-theme={theme} className={`${bodoni.variable} ${dmSans.variable}`}>
       <body>
         <a className="skip-link" href="#contenu">{locale === "fr" ? "Aller au contenu" : "Skip to content"}</a>
-        <SiteHeader locale={locale} theme={theme} />
+        <SiteHeader locale={locale} theme={theme} projects={projects.map(({ slug, title, kind, organization }) => ({ slug, title, kind, organization }))} />
         <main id="contenu">{children}</main>
         <SiteFooter locale={locale} />
       </body>

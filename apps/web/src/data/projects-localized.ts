@@ -2,9 +2,10 @@ import type { Locale } from "@/lib/locale";
 import type { Project } from "@/types/project";
 
 type Localized = { fr: string; en: string };
-type SourceProject = Omit<Project, "eyebrow" | "summary" | "description" | "role" | "flow" | "sections" | "missingInformation"> & {
+type SourceProject = Omit<Project, "eyebrow" | "summary" | "description" | "role" | "flow" | "sections" | "technicalHighlights" | "missingInformation"> & {
   eyebrow: Localized; summary: Localized; description: Localized; role: Localized | null;
   flow: readonly Localized[]; sections: readonly { title: Localized; body: Localized }[];
+  technicalHighlights: readonly { name: string; purpose: Localized }[];
   missingInformation: readonly Localized[];
 };
 
@@ -23,6 +24,11 @@ const source: readonly SourceProject[] = [
       { title: both("Ma contribution", "My contribution"), body: both("J’ai développé l’ingestion documentaire, la chaîne d’extraction et d’OCR, la recherche sémantique et l’intégration du modèle local. Le backend FastAPI sépare ingestion, indexation et recherche.", "I developed document ingestion, extraction and OCR, semantic retrieval and local model integration. The FastAPI backend separates ingestion, indexing and retrieval.") },
       { title: both("Une décision technique", "A technical decision"), body: both("BGE-M3 génère les représentations vectorielles recherchées dans ChromaDB. Les réponses sont accompagnées de références au document et à la page pour faciliter leur vérification.", "BGE-M3 creates embeddings queried in ChromaDB. Answers include document and page references so readers can verify them.") },
     ],
+    technicalHighlights: [
+      { name: "FastAPI", purpose: both("API et séparation des étapes du pipeline", "API and separation of pipeline stages") },
+      { name: "BGE-M3 + ChromaDB", purpose: both("Indexation et recherche sémantique", "Indexing and semantic retrieval") },
+      { name: "Ollama + Qwen", purpose: both("Génération locale avec sources", "Local generation with sources") },
+    ],
     missingInformation: [both("Captures réelles de l’application et démonstration reproductible", "Real application screenshots and a reproducible demo"), both("Mesures et limites observées à documenter", "Observed measurements and limitations to document")],
   },
   {
@@ -37,6 +43,11 @@ const source: readonly SourceProject[] = [
       { title: both("Ma contribution", "My contribution"), body: both("J’ai conçu et développé une architecture full-stack, l’authentification JWT, la gestion des rôles, des tableaux de bord interactifs et l’export Excel.", "I designed and developed a full-stack architecture, JWT authentication, role management, interactive dashboards and Excel export.") },
       { title: both("Publication responsable", "Responsible publication"), body: both("Les données financières internes et les écrans de ce stage ne sont pas publiés ici. Les visuels devront être autorisés ou recréés avec des données synthétiques.", "Internal financial data and internship screens are not published here. Visuals must be authorised or recreated using synthetic data.") },
     ],
+    technicalHighlights: [
+      { name: "Angular", purpose: both("Filtres et tableaux de bord interactifs", "Interactive filters and dashboards") },
+      { name: "Spring Boot + JWT", purpose: both("API, authentification et accès par rôle", "API, authentication and role-based access") },
+      { name: "Oracle + Excel", purpose: both("Données et export des rapports", "Data and report export") },
+    ],
     missingInformation: [both("Visuels autorisés ou recréés avec données synthétiques", "Approved visuals or recreations with synthetic data"), both("Résultats et contraintes vérifiables", "Verifiable outcomes and constraints")],
   },
   {
@@ -47,7 +58,7 @@ const source: readonly SourceProject[] = [
     role: null, stack: ["Next.js", "NestJS", "Prisma", "PostgreSQL"], status: "documented", featured: false,
     repositoryUrl: "https://github.com/Meriem-Hamri/Skilo", liveUrl: null, flow: [],
     sections: [{ title: both("Le concept", "The concept"), body: both("Les membres proposent des compétences, découvrent des partenaires et utilisent des crédits de temps pour organiser leurs échanges.", "Members offer skills, find matches and use time credits to arrange exchanges.") }],
-    missingInformation: [both("Contribution individuelle à préciser", "Individual contribution to specify"), both("Vérifier la disponibilité de la démo avant publication", "Verify demo availability before publication")],
+    technicalHighlights: [], missingInformation: [both("Contribution individuelle à préciser", "Individual contribution to specify"), both("Vérifier la disponibilité de la démo avant publication", "Verify demo availability before publication")],
   },
   {
     slug: "taskflow", kind: "personal", organization: null, period: null, year: null, title: "TaskFlow",
@@ -57,7 +68,7 @@ const source: readonly SourceProject[] = [
     role: null, stack: ["Angular", "TypeScript", "json-server"], status: "documented", featured: false,
     repositoryUrl: "https://github.com/Meriem-Hamri/Angular-TaskFlow", liveUrl: null, flow: [],
     sections: [{ title: both("Le fonctionnement", "How it works"), body: both("Le projet organise l’assignation, le filtrage, la validation et le suivi de l’avancement des tâches.", "The project covers task assignment, filtering, validation and progress tracking.") }],
-    missingInformation: [both("Captures et contribution détaillée", "Screenshots and detailed contribution")],
+    technicalHighlights: [], missingInformation: [both("Captures et contribution détaillée", "Screenshots and detailed contribution")],
   },
   {
     slug: "xploreia", kind: "collaboration", organization: "Projet d’équipe", period: null, year: null, title: "XploreIA",
@@ -67,7 +78,7 @@ const source: readonly SourceProject[] = [
     role: null, stack: ["React", "PHP", "MySQL"], status: "documented", featured: false,
     repositoryUrl: "https://github.com/Meriem-Hamri/XploreAi", liveUrl: null, flow: [],
     sections: [{ title: both("Le produit", "The product"), body: both("L’application rassemble découverte, comparaison, avis et organisation d’outils dans des playlists.", "The application combines discovery, comparison, reviews and organisation of tools into playlists.") }],
-    missingInformation: [both("Contribution personnelle et captures à détailler", "Personal contribution and screenshots to detail")],
+    technicalHighlights: [], missingInformation: [both("Contribution personnelle et captures à détailler", "Personal contribution and screenshots to detail")],
   },
 ];
 
@@ -79,6 +90,7 @@ export function localizedProjects(locale: Locale): readonly Project[] {
     role: project.role ? t(project.role) : null,
     flow: project.flow.map(t),
     sections: project.sections.map(section => ({ title: t(section.title), body: t(section.body) })),
+    technicalHighlights: project.technicalHighlights.map(item => ({ name: item.name, purpose: t(item.purpose) })),
     missingInformation: project.missingInformation.map(t),
   }));
 }

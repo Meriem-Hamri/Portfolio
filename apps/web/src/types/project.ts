@@ -5,6 +5,11 @@ export type ProjectSection = {
   body: string;
 };
 
+export type TechnicalHighlight = {
+  name: string;
+  purpose: string;
+};
+
 export type Project = {
   kind: "internship" | "collaboration" | "personal";
   organization: string | null;
@@ -23,5 +28,6 @@ export type Project = {
   liveUrl: string | null;
   flow: readonly string[];
   sections: readonly ProjectSection[];
+  technicalHighlights: readonly TechnicalHighlight[];
   missingInformation: readonly string[];
 };
