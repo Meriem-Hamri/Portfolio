@@ -1,33 +1,39 @@
-export type ProjectStatus = "documented" | "incomplete";
+export type ProjectColor = "blue" | "orange" | "lime" | "violet" | "pink";
+export type ProjectVisualKind = "rag" | "reporting" | "skilo" | "taskflow" | "xplore";
 
-export type ProjectSection = {
+export type EngineeringDecision = {
+  technology: string;
   title: string;
   body: string;
-};
-
-export type TechnicalHighlight = {
-  name: string;
-  purpose: string;
+  watch: string;
 };
 
 export type Project = {
+  slug: string;
   kind: "internship" | "collaboration" | "personal";
+  title: string;
+  /** Short label shown above the title: "Stage · Telepac Technology". */
+  tag: string;
   organization: string | null;
   period: string | null;
-  slug: string;
-  title: string;
-  eyebrow: string;
-  summary: string;
-  description: string;
   year: string | null;
+  color: ProjectColor;
+  visual: ProjectVisualKind;
+  /** One punchy line that sells the project. */
+  pitch: string;
+  summary: string;
   role: string | null;
+  /** Three key facts shown as chips. */
+  badges: readonly string[];
+  /** What I built, as concrete bullet points. */
+  highlights: readonly string[];
   stack: readonly string[];
-  status: ProjectStatus;
-  featured: boolean;
   repositoryUrl: string | null;
   liveUrl: string | null;
+  problem: string;
+  solution: string;
   flow: readonly string[];
-  sections: readonly ProjectSection[];
-  technicalHighlights: readonly TechnicalHighlight[];
-  missingInformation: readonly string[];
+  decisions: readonly EngineeringDecision[];
+  /** Optional credit line, e.g. a collaborator. */
+  credit: string | null;
 };

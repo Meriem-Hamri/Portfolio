@@ -1,4 +1,4 @@
-import { localizedProjects } from "@/data/projects-localized";
+import { localizedProjects } from "@/data/projects";
 import type { Locale } from "@/lib/locale";
 import type { Project } from "@/types/project";
 
@@ -6,10 +6,6 @@ import type { Project } from "@/types/project";
 // par des appels vers l'API NestJS sans modifier les pages consommatrices.
 export async function getProjects(locale: Locale = "fr"): Promise<readonly Project[]> {
   return localizedProjects(locale);
-}
-
-export async function getFeaturedProjects(locale: Locale = "fr"): Promise<readonly Project[]> {
-  return localizedProjects(locale).filter((project) => project.featured);
 }
 
 export async function getProjectBySlug(slug: string, locale: Locale = "fr"): Promise<Project | null> {

@@ -5,10 +5,10 @@ export default async function NotFound() {
   const locale = await getLocale();
   return (
     <section className="not-found shell">
-      <p className="eyebrow">404</p>
-      <h1>{pick(locale, "Cette page n’existe pas.", "This page does not exist.")}</h1>
-      <p>{pick(locale, "Le lien est peut-être incomplet ou le projet n’est pas encore publié.", "The link may be incomplete or the project may not be published yet.")}</p>
-      <Link href="/" className="button-link">{pick(locale, "Revenir à l’accueil", "Back to home")}</Link>
+      <p className="eyebrow">Erreur 404</p>
+      <h1 className="display">{pick(locale, "Page introuvable.", "Page not found.")}</h1>
+      <p>{pick(locale, "Le lien est peut-être incomplet. Les projets, eux, sont toujours là.", "The link may be incomplete. The projects are still here, though.")}</p>
+      <Link href="/#projets" className="btn">{pick(locale, "Voir les projets", "See the work")} <span className="btn__icon" aria-hidden="true">→</span></Link>
     </section>
   );
 }

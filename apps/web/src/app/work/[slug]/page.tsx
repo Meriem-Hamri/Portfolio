@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CaseStudyMotion } from "@/components/case-study-motion";
+import { ProjectArchitecture } from "@/components/project-architecture";
 import { ProjectVisual } from "@/components/project-visual";
-import { getCaseStudyNarrative } from "@/data/case-study-narratives";
+import { RagGallery } from "@/components/rag-gallery";
+import { SiteFooter } from "@/components/site-footer";
 import { getProjectBySlug, getProjects } from "@/lib/projects";
 import { getLocale, pick } from "@/lib/locale";
-import styles from "./case-study.module.css";
 
 type ProjectPageProps = { params: Promise<{ slug: string }> };
 
@@ -28,79 +28,108 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const project = await getProjectBySlug(slug, locale);
   if (!project) notFound();
   const projects = await getProjects(locale);
-  const nextProject = projects[(projects.findIndex(item => item.slug === slug) + 1) % projects.length];
-  const narrative = getCaseStudyNarrative(project, locale);
+  const index = projects.findIndex(item => item.slug === slug);
+  const next = projects[(index + 1) % projects.length];
   const fr = locale === "fr";
+  let n = 0;
+  const num = () => `(${String(++n).padStart(2, "0")})`;
 
-  return <CaseStudyMotion className={styles.caseStudy}>
-    <header className={styles.hero}>
-      <div className={styles.reflection} data-case-reflection aria-hidden="true" />
-      <div className={styles.shell}>
-        <Link className={styles.back} href="/work"><span aria-hidden="true">←</span>{fr ? "Tous les projets" : "All projects"}</Link>
-        <p className={styles.eyebrow}>{project.eyebrow}</p>
-        <h1>{project.title}</h1>
-        <p className={styles.headline}>{narrative.headline}</p>
-        <dl className={styles.facts}>
-          <div><dt>{fr ? "Contexte" : "Context"}</dt><dd>{project.organization ?? (fr ? "Projet d’équipe" : "Team project")}</dd></div>
-          <div><dt>{fr ? "Période" : "Period"}</dt><dd>{project.period ?? (fr ? "À documenter" : "To document")}</dd></div>
-          <div><dt>{fr ? "Mon rôle" : "My role"}</dt><dd>{project.role ?? (fr ? "Contribution à préciser" : "Contribution to specify")}</dd></div>
+  const facts = [
+    { label: fr ? "Rôle" : "Role", value: project.role },
+    { label: fr ? "Période" : "Period", value: project.period },
+    { label: fr ? "Contexte" : "Context", value: project.organization ?? (project.kind === "personal" ? (fr ? "Projet personnel" : "Personal project") : (fr ? "Projet d’équipe" : "Team project")) },
+    { label: fr ? "Équipe" : "Team", value: project.credit },
+  ].filter((fact): fact is { label: string; value: string } => Boolean(fact.value));
+
+  return <article className={`case case--${project.color}`}>
+    {/* Hero */}
+    <header className="case__hero">
+      <div className="shell">
+        <Link className="case__back" href="/#projets"><span aria-hidden="true">←</span> {fr ? "Tous les projets" : "All projects"}</Link>
+        <p className="case__tag" data-hero-fade>{String(index + 1).padStart(2, "0")} — {project.tag}</p>
+        <h1 className="case__title display">
+          <span className="line"><span style={{ "--l": 0 } as React.CSSProperties}>{project.title}</span></span>
+        </h1>
+        <p className="case__pitch" data-hero-fade style={{ "--d": 1 } as React.CSSProperties}>{project.pitch}</p>
+        <dl className="case__facts" data-hero-fade style={{ "--d": 2 } as React.CSSProperties}>
+          {facts.map(fact => <div key={fact.label}><dt>{fact.label}</dt><dd>{fact.value}</dd></div>)}
+          <div><dt>Stack</dt><dd>{project.stack.join(", ")}</dd></div>
         </dl>
-        <nav className={styles.index} aria-label={fr ? "Dans cette étude de cas" : "In this case study"}>
-          {project.kind === "internship" && <a href="#experience"><span>↗</span>{fr ? "Voir le produit" : "See the product"}</a>}
-          <a href="#problematique"><span>01</span>{fr ? "Le besoin" : "The challenge"}</a>
-          <a href="#solution"><span>02</span>{fr ? "La solution" : "The solution"}</a>
-          <a href="#decisions"><span>03</span>{fr ? "Les choix" : "The decisions"}</a>
-          <a href="#bilan"><span>04</span>{fr ? "Le bilan" : "The review"}</a>
-        </nav>
       </div>
     </header>
 
-    {project.kind === "internship" && <section id="experience" className={`${styles.product} ${styles.shell}`} aria-labelledby="product-title" data-case-enter>
-      <div className={styles.productHeading}><div><p className={styles.eyebrow}>{fr ? "Le produit en action" : "The product in action"}</p><h2 id="product-title">{fr ? "Entrer dans l’expérience." : "Step into the experience."}</h2></div><p>{fr ? "Explorez le parcours avant de découvrir les décisions qui le rendent possible." : "Explore the journey before discovering the decisions that make it possible."}</p></div>
-      <ProjectVisual kind={project.slug === "reporting-cse" ? "reporting" : "rag"} locale={locale} />
+    <div className="shell case__visual" data-hero-fade style={{ "--d": 3 } as React.CSSProperties}>
+      <ProjectVisual kind={project.visual} locale={locale} large />
+    </div>
+
+    {/* Problem */}
+    <section className="shell case__section" aria-labelledby="problem-title">
+      <div className="case__label" data-reveal><p className="eyebrow">{num()}</p><h2 id="problem-title">{fr ? "Le problème" : "The problem"}</h2></div>
+      <p className="case__lead" data-reveal>{project.problem}</p>
+    </section>
+
+    {/* Solution + highlights */}
+    <section className="shell case__section" aria-labelledby="solution-title">
+      <div className="case__label" data-reveal><p className="eyebrow">{num()}</p><h2 id="solution-title">{fr ? "Ce que j’ai construit" : "What I built"}</h2></div>
+      <div>
+        <p className="case__lead" data-reveal>{project.solution}</p>
+        <ol className="case__highlights">
+          {project.highlights.map((item, i) => <li key={item} data-reveal style={{ "--d": i } as React.CSSProperties}><span>{String(i + 1).padStart(2, "0")}</span>{item}</li>)}
+        </ol>
+      </div>
+    </section>
+
+    {project.visual === "rag" && <section className="shell case__section case__section--wide" aria-labelledby="screens-title">
+      <div className="case__label" data-reveal><p className="eyebrow">{num()}</p><h2 id="screens-title">{fr ? "L’application, en vrai" : "The real application"}</h2></div>
+      <RagGallery locale={locale} />
     </section>}
 
-    <section id="problematique" className={`${styles.chapter} ${styles.shell}`} aria-labelledby="challenge-title" data-case-enter>
-      <p className={styles.eyebrow}>01 / {fr ? "Comprendre le besoin" : "Understand the need"}</p>
-      <h2 id="challenge-title">{narrative.challengeTitle}</h2>
-      <div className={styles.challengeBody}><p>{narrative.challenge}</p><aside><span>{fr ? "L’objectif de conception" : "The design objective"}</span><p>{narrative.objective}</p></aside></div>
-    </section>
-
-    <section id="solution" className={styles.solution} aria-labelledby="solution-title">
-      <div className={styles.shell}>
-        <div data-case-enter><p className={styles.eyebrow}>02 / {fr ? "Concevoir la réponse" : "Design the response"}</p><h2 id="solution-title">{narrative.solutionTitle}</h2><p className={styles.solutionLead}>{narrative.solution}</p></div>
-        {project.flow.length > 0 && <div className={styles.flow} data-case-enter>
-          <div className={styles.flowTrack} data-case-track aria-hidden="true" />
-          <ol aria-label={fr ? "Du besoin au résultat, étape par étape" : "From need to result, step by step"}>{project.flow.map((step, index) => <li key={step}><span aria-hidden="true">0{index + 1}</span><strong>{step}</strong></li>)}</ol>
-        </div>}
-        <div className={styles.contribution} data-case-enter><p className={styles.eyebrow}>{fr ? "Mon périmètre" : "My scope"}</p><p>{narrative.delivery}</p></div>
+    {/* Flow */}
+    {project.flow.length > 0 && <section className="case__flow" aria-labelledby="flow-title">
+      <div className="shell">
+        <div className="case__label" data-reveal><p className="eyebrow">{num()}</p><h2 id="flow-title">{fr ? "Comment ça marche" : "How it works"}</h2></div>
+        <ol className="flow">
+          {project.flow.map((step, i) => <li key={step} data-reveal style={{ "--d": i } as React.CSSProperties}><span>{String(i + 1).padStart(2, "0")}</span><strong>{step}</strong></li>)}
+        </ol>
       </div>
+    </section>}
+
+    {/* Architecture */}
+    <section className="shell case__section case__section--wide" aria-labelledby="architecture-title">
+      <div className="case__label" data-reveal><p className="eyebrow">{num()}</p><h2 id="architecture-title">{fr ? "Architecture" : "Architecture"}</h2></div>
+      <div data-reveal><ProjectArchitecture slug={project.slug} locale={locale} /></div>
     </section>
 
-    <section id="decisions" className={`${styles.chapter} ${styles.shell}`} aria-labelledby="decisions-title" data-case-enter>
-      <p className={styles.eyebrow}>03 / {fr ? "L’intention derrière la technique" : "The intention behind the technology"}</p>
-      <h2 id="decisions-title">{fr ? "Chaque choix a un rôle." : "Every choice has a purpose."}</h2>
-      {narrative.decisions.length > 0 ? <>
-        <p className={styles.sectionIntro}>{fr ? "Ouvrez une décision pour comprendre son rôle, son intérêt pour le besoin et ce qu’il reste à vérifier." : "Open a decision to understand its role, how it serves the need and what still needs verification."}</p>
-        <div className={styles.decisions}>{narrative.decisions.map((decision, index) => <details className={styles.decision} key={decision.technology} open={index === 0}>
-          <summary><span className={styles.decisionIndex}>0{index + 1}</span><span><small>{decision.technology}</small><strong>{decision.intent}</strong></span><span className={styles.decisionToggle} aria-hidden="true">+</span></summary>
-          <div className={styles.decisionBody}><div><h3>{fr ? "Pourquoi ce choix répond au besoin" : "How this choice serves the need"}</h3><p>{decision.rationale}</p></div><div><h3>{fr ? "Le point de vigilance" : "The consideration"}</h3><p>{decision.consideration}</p></div></div>
-        </details>)}</div>
-      </> : <p className={styles.sectionIntro}>{fr ? "Les technologies sont documentées dans le dépôt. Le détail des arbitrages et de ma contribution reste à compléter avec des éléments vérifiables." : "The technologies are documented in the repository. Detailed trade-offs and my contribution still need to be supported with verifiable information."}</p>}
-      <div className={styles.stack}><span>{fr ? "Environnement technique" : "Technical environment"}</span><ul>{project.stack.map(technology => <li key={technology}>{technology}</li>)}</ul></div>
-    </section>
-
-    <section id="bilan" className={styles.review} aria-labelledby="review-title">
-      <div className={styles.shell} data-case-enter>
-        <p className={styles.eyebrow}>04 / {fr ? "Livrer et vérifier" : "Deliver and verify"}</p>
-        <h2 id="review-title">{fr ? "Du concret. Et des limites explicites." : "Real work. Explicit boundaries."}</h2>
-        <div className={styles.reviewGrid}><div><h3>{fr ? "Les éléments disponibles" : "Available evidence"}</h3><p>{narrative.evidence}</p><div className={styles.links}>{project.repositoryUrl && <a href={project.repositoryUrl} target="_blank" rel="noreferrer">{fr ? "Explorer le dépôt" : "Explore the repository"}<span aria-hidden="true">↗</span><span className="sr-only">{fr ? " (nouvel onglet)" : " (new tab)"}</span></a>}{project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noreferrer">{fr ? "Ouvrir la démo" : "Open the demo"}<span aria-hidden="true">↗</span><span className="sr-only">{fr ? " (nouvel onglet)" : " (new tab)"}</span></a>}</div></div><div><h3>{fr ? "La prochaine vérification" : "The next verification"}</h3><ul>{narrative.limits.map(item => <li key={item}>{item}</li>)}</ul></div></div>
+    {/* Decisions */}
+    {project.decisions.length > 0 && <section className="shell case__section case__section--wide" aria-labelledby="decisions-title">
+      <div className="case__label" data-reveal><p className="eyebrow">{num()}</p><h2 id="decisions-title">{fr ? "Décisions techniques" : "Technical decisions"}</h2></div>
+      <div className="decisions">
+        {project.decisions.map((decision, i) => <div key={decision.technology} className="decision" data-reveal style={{ "--d": i } as React.CSSProperties}>
+          <p className="decision__tech">{decision.technology}</p>
+          <h3>{decision.title}</h3>
+          <p>{decision.body}</p>
+          <p className="decision__watch"><strong>{fr ? "Point d’attention" : "Watch out"}</strong>{decision.watch}</p>
+        </div>)}
       </div>
-    </section>
+    </section>}
 
-    <footer className={`${styles.next} ${styles.shell}`}>
-      <Link href="/work" className={styles.back}><span aria-hidden="true">←</span>{fr ? "Retour aux projets" : "Back to projects"}</Link>
-      {nextProject && <Link href={`/work/${nextProject.slug}`} className={styles.nextLink}><span>{fr ? "À découvrir ensuite" : "Explore next"}<strong>{nextProject.title}</strong></span><span aria-hidden="true">↗</span></Link>}
-    </footer>
-  </CaseStudyMotion>;
+    {/* Links */}
+    {(project.repositoryUrl || project.liveUrl) && <section className="shell case__cta" data-reveal>
+      <p>{fr ? "Envie de voir le code ?" : "Want to see the code?"}</p>
+      <div className="hero__actions">
+        {project.repositoryUrl && <a className="btn" href={project.repositoryUrl} target="_blank" rel="noreferrer">{fr ? "Voir sur GitHub" : "View on GitHub"} <span className="btn__icon btn__icon--up" aria-hidden="true">↗</span></a>}
+        {project.liveUrl && <a className="btn btn--ghost" href={project.liveUrl} target="_blank" rel="noreferrer">{fr ? "Ouvrir la démo" : "Open the demo"} <span className="btn__icon btn__icon--up" aria-hidden="true">↗</span></a>}
+      </div>
+    </section>}
+
+    {/* Next project */}
+    <Link href={`/work/${next.slug}`} className={`case__next case--${next.color}`}>
+      <span className="shell">
+        <span className="eyebrow">{fr ? "Projet suivant" : "Next project"}</span>
+        <span className="case__next-title display">{next.title} <span aria-hidden="true">→</span></span>
+        <span className="case__next-pitch">{next.pitch}</span>
+      </span>
+    </Link>
+    <SiteFooter locale={locale} />
+  </article>;
 }

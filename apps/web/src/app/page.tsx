@@ -1,58 +1,156 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowLink } from "@/components/arrow-link";
-import { InternshipShowcase } from "@/components/internship-showcase";
-import { ScrollMotion } from "@/components/scroll-motion";
-import { getFeaturedProjects, getProjects } from "@/lib/projects";
+import { CopyEmail } from "@/components/copy-email";
+import { ProjectStack } from "@/components/project-stack";
+import { getProjects } from "@/lib/projects";
 import { getLocale, pick } from "@/lib/locale";
+
+const EMAIL = "meriemhamri78@gmail.com";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
-  return { title: "Meriem Hamri · Software engineer", description: pick(locale, "Portfolio de Meriem Hamri : stages en ingénierie logicielle et projets full-stack.", "Meriem Hamri's portfolio: software engineering internships and full-stack projects.") };
+  return {
+    title: "Meriem Hamri · Software engineer",
+    description: pick(locale,
+      "Ingénieure logiciel : un assistant IA 100 % local chez Telepac, une plateforme de reporting à la TGR, et des projets full-stack.",
+      "Software engineer: a fully local AI assistant at Telepac, a reporting platform at the Treasury, and full-stack projects."),
+  };
 }
+
+const marquee = ["FastAPI", "Next.js", "Angular", "Spring Boot", "NestJS", "ChromaDB", "Ollama", "PostgreSQL", "Oracle", "TypeScript", "React", "Prisma", "OCR", "RAG"];
 
 export default async function HomePage() {
   const locale = await getLocale();
-  const internships = await getFeaturedProjects(locale);
-  const otherProjects = (await getProjects(locale)).filter(project => !project.featured);
-  return (
-    <div className="continuous-page">
-      <ScrollMotion />
-      <section id="accueil" className="editorial-hero" aria-labelledby="intro-title">
-        <div className="shell">
-          <p className="eyebrow hero-kicker">Meriem Hamri — Software engineer</p>
-          <h1 id="intro-title" className="editorial-name"><span>Meriem</span><span className="satin-name">Hamri<span className="satin-specimen" aria-hidden="true" /></span></h1>
-          <p className="editorial-intro">{pick(locale, "Je conçois des applications.", "I design and build applications.")}<br />{pick(locale, "Avec de la rigueur dans le code,", "With care in the code,")}<br /><em>{pick(locale, "et de l’attention dans les détails.", "and attention to every detail.")}</em></p>
-          <a className="explore-link" href="#projets">{pick(locale, "Explorer mes projets", "Explore my work")} <span aria-hidden="true">↓</span></a>
-          <div className="hero-marginalia" aria-hidden="true"><span>{pick(locale, "Code & sensibilité", "Code & sensibility")}</span><span>Nature · Design · Software</span></div>
-        </div>
-      </section>
-      <section id="projets" className="project-chapter color-wipe" data-color-wipe aria-labelledby="projects-title">
-        <div className="shell">
-          <InternshipShowcase projects={internships} locale={locale} />
-          <div className="more-work" data-reveal>
-            <div className="more-work__intro"><p className="eyebrow">{pick(locale, "Autres réalisations", "More work")}</p><h3>{pick(locale, "Construire aussi hors du stage.", "Building beyond internships.")}</h3></div>
-            <div className="more-work__list">{otherProjects.map((project, index) => <article key={project.slug} className="more-work__item"><span>0{index + 3}</span><div><p>{project.eyebrow}</p><h4>{project.title}</h4><p>{project.summary}</p></div><Link href={`/work/${project.slug}`} aria-label={pick(locale, `Explorer ${project.title}`, `Explore ${project.title}`)}>↗</Link></article>)}</div>
+  const projects = await getProjects(locale);
+  const fr = locale === "fr";
+  const titleLines = fr
+    // "‑" is a non-breaking hyphen so "full-stack" never splits on small screens.
+    ? ["Je construis", "des apps full‑stack", "et des IA qui citent"]
+    : ["I build", "full‑stack apps", "and AI that cites"];
+
+  const skills = [
+    { title: fr ? "IA & données" : "AI & data", color: "var(--blue)", fg: "#fff", icon: "AI", items: ["RAG", "BGE-M3", "ChromaDB", "Ollama · Qwen", "OCR"] },
+    { title: "Backend", color: "var(--orange)", fg: "#121212", icon: "{ }", items: ["FastAPI", "Spring Boot", "NestJS", "PHP", "Celery", "JWT"] },
+    { title: "Frontend", color: "var(--lime)", fg: "#121212", icon: "</>", items: ["Next.js", "React", "Angular", "TypeScript"] },
+    { title: fr ? "Bases de données" : "Databases", color: "var(--violet)", fg: "#121212", icon: "DB", items: ["PostgreSQL", "Oracle", "MySQL", "Prisma"] },
+  ];
+
+  return <>
+    {/* ───────── Hero ───────── */}
+    <section id="accueil" className="hero" aria-labelledby="hero-title">
+      <div className="shell">
+        <p className="eyebrow hero__kicker" data-hero-fade><span className="hero__pulse" aria-hidden="true" />{fr ? "Meriem Hamri — Élève ingénieure en génie logiciel" : "Meriem Hamri — Software engineering student"}</p>
+        <h1 id="hero-title" className="hero__title display">
+          {titleLines.map((line, index) => <span key={line} className="line"><span style={{ "--l": index } as React.CSSProperties}>{line}</span></span>)}
+          <span className="line"><span style={{ "--l": 3 } as React.CSSProperties}>{fr ? "leurs " : "its "}<span className="hero__mark">sources.</span><a className="hero__cite" href="#projet-assistant-documentaire-rag-local" aria-label={fr ? "Référence 1 : l’assistant RAG" : "Reference 1: the RAG assistant"}>[1]</a></span></span>
+        </h1>
+        <div className="hero__bottom">
+          <div data-hero-fade style={{ "--d": 1 } as React.CSSProperties}>
+            <p className="hero__lead">{fr
+              ? <>Étudiante en cycle ingénieur ILISI à la FSTM. J’ai conçu <strong>un assistant IA 100 % local</strong> chez Telepac Technology et <strong>une plateforme de reporting financier</strong> à la Trésorerie Générale du Royaume.</>
+              : <>Engineering student (ILISI, FSTM). I built <strong>a fully local AI assistant</strong> at Telepac Technology and <strong>a financial reporting platform</strong> at Morocco’s General Treasury.</>}</p>
+            <div className="hero__actions">
+              <a className="btn" href="#projets">{fr ? "Voir les projets" : "See my work"} <span className="btn__icon btn__icon--down" aria-hidden="true">↓</span></a>
+              <a className="btn btn--ghost" href="#contact">{fr ? "Me contacter" : "Get in touch"}</a>
+            </div>
           </div>
-          <div className="section-end-link"><ArrowLink href="/work">{pick(locale, "Tous les projets", "All projects")}</ArrowLink></div>
+          <dl className="hero__facts" data-hero-fade style={{ "--d": 2 } as React.CSSProperties}>
+            <div><dt>02</dt><dd>{fr ? "stages en entreprise" : "industry internships"}</dd></div>
+            <div><dt>05</dt><dd>{fr ? "projets à explorer" : "projects to explore"}</dd></div>
+            <p className="hero__note">[1] <a href="#projet-assistant-documentaire-rag-local">{fr ? "AssistantAI — RAG local, Telepac 2026" : "AssistantAI — local RAG, Telepac 2026"}</a></p>
+          </dl>
         </div>
-      </section>
-      <section id="a-propos" className="about-chapter color-wipe" data-color-wipe aria-labelledby="about-title"><div className="shell">
-        <header className="chapter-heading" data-reveal><p className="eyebrow">{pick(locale, "02 / À propos", "02 / About")}</p><h2 id="about-title">{pick(locale, "La logique.", "The logic.")}<br /><em>{pick(locale, "Et l’intuition.", "And the intuition.")}</em></h2></header>
-        <div className="about-manifesto" data-reveal><p>{pick(locale, "Étudiante en génie logiciel à la FSTM, j’aime comprendre ce qui se passe derrière l’écran autant que ce que l’on ressent en l’utilisant.", "A software engineering student at FSTM, I care about what happens behind the screen as much as what it feels like to use.")}</p></div>
-        <div className="about-notes">
-          <section data-reveal><span>01</span><h3>{pick(locale, "Construire", "Build")}</h3><p>{pick(locale, "Relier interface, API et données avec des responsabilités claires.", "Connect interfaces, APIs and data with clear responsibilities.")}</p></section>
-          <section data-reveal><span>02</span><h3>{pick(locale, "Comprendre", "Understand")}</h3><p>{pick(locale, "Explorer la recherche documentaire et les modèles exécutés localement.", "Explore document retrieval and models running locally.")}</p></section>
-          <section data-reveal><span>03</span><h3>{pick(locale, "Observer", "Observe")}</h3><p>{pick(locale, "La mode, le design et les couleurs inattendues dans la nature nourrissent mon regard.", "Fashion, design and unexpected colours in nature shape my eye.")}</p></section>
-        </div><div className="about-signature" aria-hidden="true">Meriem.</div>
-      </div></section>
-      <section id="contact" className="contact-chapter color-wipe" data-color-wipe aria-labelledby="contact-title"><div className="shell">
-        <p className="eyebrow eyebrow--light" data-reveal>{pick(locale, "03 / Et maintenant ?", "03 / What’s next?")}</p>
-        <h2 id="contact-title" data-reveal>{pick(locale, "Faisons", "Let’s")}<br /><em>{pick(locale, "connaissance.", "connect.")}</em></h2>
-        <p data-reveal>{pick(locale, "Un projet, une idée ou un échange autour du logiciel.", "A project, an idea or a conversation about software.")}</p>
-        <div className="contact-chapter__links" data-reveal><ArrowLink href="mailto:meriemhamri78@gmail.com" tone="light">{pick(locale, "Écrivez-moi", "Email me")}</ArrowLink><ArrowLink href="https://www.linkedin.com/in/meriem-hamri-b45637278" external tone="light">LinkedIn</ArrowLink><ArrowLink href="https://github.com/Meriem-Hamri" external tone="light">GitHub</ArrowLink></div>
-        <a href="#accueil" className="back-top">{pick(locale, "Retour en haut", "Back to top")} ↑</a>
-      </div></section>
-    </div>
-  );
+      </div>
+      <div className="marquee" aria-hidden="true">
+        {[0, 1].map(copy => <div key={copy} className="marquee__track">{marquee.map(item => <span key={item} className="marquee__item">{item}</span>)}</div>)}
+      </div>
+    </section>
+
+    {/* ───────── Projects ───────── */}
+    <section id="projets" className="section" aria-labelledby="projects-title">
+      <div className="shell">
+        <header className="section-head">
+          <div data-reveal>
+            <p className="eyebrow">(01) {fr ? "Travaux sélectionnés" : "Selected work"}</p>
+            <h2 id="projects-title" className="display">{fr ? "Projets" : "Work"}<sup>({String(projects.length).padStart(2, "0")})</sup></h2>
+          </div>
+          <p data-reveal style={{ "--d": 1 } as React.CSSProperties}>{fr
+            ? "Deux stages en entreprise, puis des projets menés en équipe. Chaque carte mène à une étude de cas : le problème, ce que j’ai construit et pourquoi."
+            : "Two industry internships, then team projects. Each card leads to a case study: the problem, what I built and why."}</p>
+        </header>
+        <ProjectStack projects={projects} locale={locale} />
+      </div>
+    </section>
+
+    {/* ───────── About ───────── */}
+    <section id="a-propos" className="section" aria-labelledby="about-title">
+      <div className="shell">
+        <header className="section-head">
+          <div data-reveal>
+            <p className="eyebrow">(02) {fr ? "À propos" : "About"}</p>
+            <h2 id="about-title" className="display">{fr ? "Moi, en bref." : "Me, briefly."}</h2>
+          </div>
+        </header>
+        <div className="about__grid">
+          <div data-reveal>
+            <p className="about__statement">{fr
+              ? <>J’aime comprendre ce qui se passe <em>derrière l’écran</em>, autant que ce qu’on ressent <em>en l’utilisant</em>.</>
+              : <>I care about what happens <em>behind the screen</em> as much as what it feels like <em>to use</em>.</>}</p>
+            <p className="about__text">{fr
+              ? "De l’extraction de documents à l’interface finale, je travaille sur toute la chaîne : pipelines de données, API, authentification, tableaux de bord. Mes deux stages m’ont appris à livrer des outils utiles dans des contextes réels, avec des contraintes réelles."
+              : "From document extraction to the final interface, I work across the whole chain: data pipelines, APIs, authentication, dashboards. My two internships taught me to ship useful tools in real contexts, with real constraints."}</p>
+          </div>
+          <div data-reveal style={{ "--d": 1 } as React.CSSProperties}>
+            <div className="timeline__group">
+              <p className="eyebrow">{fr ? "Expérience" : "Experience"}</p>
+              <ul className="timeline">
+                <li><strong><span className="dot" style={{ background: "var(--blue)" }} />Telepac Technology</strong><span>2026</span><small>{fr ? "Stage ingénierie logicielle · Assistant RAG local" : "Software engineering internship · Local RAG assistant"}</small></li>
+                <li><strong><span className="dot" style={{ background: "var(--orange)" }} />{fr ? "Trésorerie Générale du Royaume" : "General Treasury of the Kingdom"}</strong><span>2025</span><small>{fr ? "Stage PFE · Plateforme de reporting full-stack" : "Final-year internship · Full-stack reporting platform"}</small></li>
+              </ul>
+            </div>
+            <div className="timeline__group">
+              <p className="eyebrow">{fr ? "Formation" : "Education"}</p>
+              <ul className="timeline">
+                <li><strong>{fr ? "Cycle ingénieur ILISI" : "Engineering degree, ILISI"}</strong><span>2025 —</span><small>FSTM</small></li>
+                <li><strong>{fr ? "Licence Informatique, Réseaux et Multimédia" : "BSc Computer Science, Networks & Multimedia"}</strong><span>2024 — 25</span><small>FSTM</small></li>
+                <li><strong>{fr ? "DEUST Maths, Informatique, Physique" : "DEUST Maths, CS & Physics"}</strong><span>2022 — 24</span><small>FSTM</small></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div className="skills">
+          {skills.map((skill, index) => <div key={skill.title} className="skill" data-reveal style={{ "--d": index } as React.CSSProperties}>
+            <span className="skill__icon" style={{ background: skill.color, color: skill.fg }} aria-hidden="true">{skill.icon}</span>
+            <h3>{skill.title}</h3>
+            <ul>{skill.items.map(item => <li key={item}>{item}</li>)}</ul>
+          </div>)}
+        </div>
+      </div>
+    </section>
+
+    {/* ───────── Contact ───────── */}
+    <section id="contact" className="contact" aria-labelledby="contact-title">
+      <div className="shell">
+        <p className="eyebrow" data-reveal>(03) Contact</p>
+        <h2 id="contact-title" className="contact__title display" data-reveal>
+          <a href={`mailto:${EMAIL}`}>{fr ? "Parlons-en" : "Let’s talk"} <span className="arrow" aria-hidden="true">→</span></a>
+        </h2>
+        <p className="contact__lead" data-reveal>{fr
+          ? "Un stage, un projet, une question sur mon travail ? Je réponds avec plaisir."
+          : "An internship, a project, a question about my work? I’d be glad to hear from you."}</p>
+        <div className="contact__email" data-reveal>
+          <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+          <CopyEmail email={EMAIL} locale={locale} />
+        </div>
+        <nav className="contact__links" aria-label={fr ? "Réseaux" : "Social links"} data-reveal>
+          <a href="https://www.linkedin.com/in/meriem-hamri-b45637278" target="_blank" rel="noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
+          <a href="https://github.com/Meriem-Hamri" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+          <a href={`mailto:${EMAIL}`}>Email <span aria-hidden="true">↗</span></a>
+        </nav>
+        <div className="contact__foot">
+          <span>© {new Date().getFullYear()} Meriem Hamri</span>
+          <a href="#accueil">{fr ? "Retour en haut ↑" : "Back to top ↑"}</a>
+        </div>
+      </div>
+    </section>
+  </>;
 }
