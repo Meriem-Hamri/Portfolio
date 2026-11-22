@@ -19,9 +19,9 @@ export function RagGallery({ locale }: { locale: Locale }) {
   const go = (delta: number) => setSelected(value => (value + delta + captures.length) % captures.length);
   return <>
     <div className="gallery">
-      {captures.map((item, index) => <button key={item.file} type="button" className="gallery__item" data-reveal style={{ "--d": index } as React.CSSProperties} aria-haspopup="dialog" onClick={() => { setSelected(index); dialog.current?.showModal(); }}>
+      {captures.map((item, index) => <button key={item.file} type="button" className="gallery__item" aria-haspopup="dialog" onClick={() => { setSelected(index); dialog.current?.showModal(); }}>
         <span className="gallery__img"><Image src={`/images/rag/${item.file}.png`} width={item.width} height={item.height} sizes="(max-width: 700px) 100vw, 50vw" alt="" /></span>
-        <span className="gallery__label">{fr ? item.fr : item.en}<span aria-hidden="true">⤢</span></span>
+        <span className="gallery__label">{fr ? item.fr : item.en}<span>{fr ? "Agrandir" : "Enlarge"}</span></span>
       </button>)}
     </div>
     <dialog ref={dialog} className="lightbox" aria-label={fr ? "Capture agrandie" : "Enlarged screenshot"}

@@ -12,12 +12,11 @@ type Source = {
   organization: string | null;
   period: L | null;
   year: string | null;
-  color: Project["color"];
+  tone: Project["tone"];
   visual: Project["visual"];
-  pitch: L;
+  headline: readonly [L, L];
   summary: L;
   role: L | null;
-  badges: readonly L[];
   highlights: readonly L[];
   stack: readonly string[];
   repositoryUrl: string | null;
@@ -26,6 +25,7 @@ type Source = {
   solution: L;
   flow: readonly L[];
   decisions: readonly { technology: string; title: L; body: L; watch: L }[];
+  nextSteps: readonly L[];
   credit: L | null;
 };
 
@@ -33,20 +33,19 @@ const source: readonly Source[] = [
   {
     slug: "assistant-documentaire-rag-local",
     kind: "internship",
-    title: "AssistantAI",
+    title: "Assistant documentaire",
     tag: l("Stage · Telepac Technology", "Internship · Telepac Technology"),
     organization: "Telepac Technology · Casablanca",
     period: l("Juil. — Sept. 2026", "Jul — Sep 2026"),
     year: "2026",
-    color: "blue",
+    tone: "olive",
     visual: "rag",
-    pitch: l("Vos documents répondent. Sources à l’appui.", "Your documents answer back. With sources."),
+    headline: [l("Retrouver la réponse.", "Find the answer."), l("Vérifier la source.", "Check the source.")],
     summary: l(
       "Un assistant IA 100 % local qui lit des PDF, des documents Word et des images scannées, puis répond en langage naturel en citant le document et la page.",
       "A fully local AI assistant that reads PDFs, Word documents and scanned images, then answers in plain language, citing the document and page.",
     ),
     role: l("Stagiaire ingénieure logiciel", "Software engineering intern"),
-    badges: [l("100 % local", "100% local"), l("PDF · Word · OCR", "PDF · Word · OCR"), l("Réponses sourcées", "Cited answers")],
     highlights: [
       l("Pipeline d’ingestion : extraction, OCR, nettoyage, découpage et métadonnées", "Ingestion pipeline: extraction, OCR, cleaning, chunking and metadata"),
       l("Recherche sémantique BGE-M3 + ChromaDB, filtrable par catégorie, département et année", "Semantic search with BGE-M3 + ChromaDB, filterable by category, department and year"),
@@ -84,6 +83,10 @@ const source: readonly Source[] = [
         watch: l("Une réponse sourcée peut quand même se tromper : la source sert justement à vérifier.", "A cited answer can still be wrong, which is exactly why the source is there."),
       },
     ],
+    nextSteps: [
+      l("Constituer un jeu de questions avec réponses attendues et passages sources.", "Build a question set with expected answers and source passages."),
+      l("Mesurer la qualité de récupération, la fidélité des réponses et les temps de traitement.", "Measure retrieval quality, answer faithfulness and processing times."),
+    ],
     credit: null,
   },
   {
@@ -94,15 +97,14 @@ const source: readonly Source[] = [
     organization: "Trésorerie Générale du Royaume · Rabat",
     period: l("Avr. — Juil. 2025", "Apr — Jul 2025"),
     year: "2025",
-    color: "orange",
+    tone: "terracotta",
     visual: "reporting",
-    pitch: l("Des comptes publics, lisibles en un coup d’œil.", "Public accounts, readable at a glance."),
+    headline: [l("Filtrer les comptes.", "Filter the accounts."), l("Exporter le rapport.", "Export the report.")],
     summary: l(
       "Une plateforme de reporting financier pour suivre et analyser les Comptes des Services de l’État, avec des vues adaptées à chaque rôle.",
       "A financial reporting platform to track and analyse State Service Accounts, with views tailored to each role.",
     ),
     role: l("Développeuse full-stack (PFE)", "Full-stack developer (final-year project)"),
-    badges: [l("Full-stack", "Full-stack"), l("JWT + rôles", "JWT + roles"), l("Export Excel", "Excel export")],
     highlights: [
       l("Architecture full-stack Angular, Spring Boot et Oracle, conçue de bout en bout", "End-to-end full-stack architecture with Angular, Spring Boot and Oracle"),
       l("Authentification JWT et accès aux fonctionnalités selon le rôle", "JWT authentication and role-based access to features"),
@@ -140,6 +142,10 @@ const source: readonly Source[] = [
         watch: l("Le rapport exporté doit refléter exactement les filtres appliqués.", "The exported report must match the applied filters exactly."),
       },
     ],
+    nextSteps: [
+      l("Tester rôle par rôle les autorisations côté serveur.", "Test server-side permissions role by role."),
+      l("Vérifier automatiquement que l’export reflète les filtres appliqués.", "Automatically check that the export matches the applied filters."),
+    ],
     credit: null,
   },
   {
@@ -150,15 +156,14 @@ const source: readonly Source[] = [
     organization: null,
     period: null,
     year: null,
-    color: "lime",
+    tone: "sable",
     visual: "skilo",
-    pitch: l("Enseigne ce que tu sais. Apprends ce qui te manque.", "Teach what you know. Learn what you don’t."),
+    headline: [l("Enseigner une compétence.", "Teach a skill."), l("En apprendre une autre.", "Learn another one.")],
     summary: l(
       "Une plateforme où l’on enseigne une compétence pour gagner des crédits de temps, puis on les dépense pour en apprendre une autre.",
       "A platform where you teach a skill to earn time credits, then spend them to learn another one.",
     ),
     role: l("Développement full-stack, en binôme", "Full-stack development, in a pair"),
-    badges: [l("Crédits de temps", "Time credits"), l("Matching", "Matching"), l("Full-stack TS", "Full-stack TS")],
     highlights: [
       l("Profils avec compétences proposées et compétences recherchées", "Profiles with skills offered and skills wanted"),
       l("Mise en relation entre membres complémentaires", "Matching between complementary members"),
@@ -177,6 +182,10 @@ const source: readonly Source[] = [
     ),
     flow: [l("Créer son profil", "Create a profile"), l("Trouver un match", "Find a match"), l("Échanger", "Exchange"), l("Gagner des crédits", "Earn credits")],
     decisions: [],
+    nextSteps: [
+      l("Ajouter un système d’avis après chaque échange.", "Add reviews after each exchange."),
+      l("Publier une démo en ligne.", "Publish an online demo."),
+    ],
     credit: l("Développé avec Zakariae Bakkari", "Built with Zakariae Bakkari"),
   },
   {
@@ -187,15 +196,14 @@ const source: readonly Source[] = [
     organization: null,
     period: null,
     year: null,
-    color: "pink",
+    tone: "blush",
     visual: "xplore",
-    pitch: l("Le bon outil IA, sans se perdre.", "The right AI tool, without getting lost."),
+    headline: [l("Comparer les outils IA.", "Compare AI tools."), l("Garder les bons.", "Keep the good ones.")],
     summary: l(
       "Un catalogue pour découvrir, comparer et organiser des outils IA, avec avis, filtres avancés et playlists.",
       "A catalogue to discover, compare and organise AI tools, with reviews, advanced filters and playlists.",
     ),
     role: l("Développement full-stack, en équipe", "Full-stack development, in a team"),
-    badges: [l("3 rôles", "3 roles"), l("Avis & notes", "Reviews & ratings"), l("Playlists", "Playlists")],
     highlights: [
       l("Catalogue avec filtres avancés pour comparer les outils", "Catalogue with advanced filters to compare tools"),
       l("Avis et notes laissés par les utilisateurs", "User reviews and ratings"),
@@ -214,6 +222,10 @@ const source: readonly Source[] = [
     ),
     flow: [l("Explorer", "Explore"), l("Filtrer", "Filter"), l("Comparer les avis", "Compare reviews"), l("Créer une playlist", "Build a playlist")],
     decisions: [],
+    nextSteps: [
+      l("Recommander des outils à partir des playlists.", "Recommend tools from playlists."),
+      l("Ajouter des captures du produit à l’étude de cas.", "Add product screenshots to the case study."),
+    ],
     credit: null,
   },
   {
@@ -224,15 +236,14 @@ const source: readonly Source[] = [
     organization: null,
     period: null,
     year: null,
-    color: "violet",
+    tone: "sauge",
     visual: "taskflow",
-    pitch: l("L’équipe avance. Et ça se voit.", "The team moves forward. And you can see it."),
+    headline: [l("Assigner, valider.", "Assign, approve."), l("Suivre l’avancement.", "Track progress.")],
     summary: l(
       "Une application de suivi des tâches en équipe : assignation, validation, filtres et suivi de l’avancement.",
       "A team task tracker: assignment, validation, filtering and progress tracking.",
     ),
     role: l("Développement front-end", "Front-end development"),
-    badges: [l("Angular", "Angular"), l("Validation", "Approval flow"), l("Suivi d’avancement", "Progress tracking")],
     highlights: [
       l("Assignation des tâches aux membres de l’équipe", "Task assignment to team members"),
       l("Circuit de validation des tâches terminées", "Approval flow for completed tasks"),
@@ -251,6 +262,10 @@ const source: readonly Source[] = [
     ),
     flow: [l("Créer", "Create"), l("Assigner", "Assign"), l("Réaliser", "Do"), l("Valider", "Approve")],
     decisions: [],
+    nextSteps: [
+      l("Remplacer json-server par une vraie API et une base de données.", "Replace json-server with a real API and database."),
+      l("Ajouter des notifications quand une tâche attend une validation.", "Notify users when a task awaits approval."),
+    ],
     credit: null,
   },
 ];
@@ -261,15 +276,15 @@ export function localizedProjects(locale: Locale): readonly Project[] {
     ...p,
     tag: t(p.tag),
     period: p.period ? t(p.period) : null,
-    pitch: t(p.pitch),
+    headline: [t(p.headline[0]), t(p.headline[1])] as const,
     summary: t(p.summary),
     role: p.role ? t(p.role) : null,
-    badges: p.badges.map(t),
     highlights: p.highlights.map(t),
     problem: t(p.problem),
     solution: t(p.solution),
     flow: p.flow.map(t),
     decisions: p.decisions.map((d) => ({ technology: d.technology, title: t(d.title), body: t(d.body), watch: t(d.watch) })),
+    nextSteps: p.nextSteps.map(t),
     credit: p.credit ? t(p.credit) : null,
   }));
 }

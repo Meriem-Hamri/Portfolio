@@ -2,11 +2,11 @@
 
 Portfolio software engineer de Meriem Hamri, en français et en anglais (sélecteur EN/FR), avec mode clair et sombre.
 
-**Direction visuelle « clair et audacieux »** : fond crème, typographie Bricolage Grotesque très grande, une couleur forte par projet (bleu, orange, citron, rose, lilas).
+**Direction visuelle** : fond blanc cassé, palette tirée de la photo de Meriem (olive, terracotta, sable), Bodoni Moda pour le nom et DM Sans pour le texte. Mode sombre « serre de nuit » (vert nuit, lin, olive clair).
 
-- **Accueil (one-page)** : hero avec accroche claire et chiffres clés, bandeau de technologies défilant, projets en cartes colorées qui s'empilent au défilement, à propos (parcours + compétences), contact (email copiable, LinkedIn, GitHub).
-- **Études de cas** (`/work/[slug]`) : problème, ce que j'ai construit, captures réelles (RAG), étapes, architecture interactive, décisions techniques, lien GitHub et projet suivant.
-- **Animations** : entrée du hero en CSS, apparitions au scroll, mini-interfaces animées par projet, empilement des cartes avec GSAP ScrollTrigger. Tout est désactivé si `prefers-reduced-motion` est activé ; aucun défilement n'est détourné.
+- **Accueil (one-page)** : « Bonjour, je suis Meriem Hamri. » avec sa photo entourée d'étiquettes de technologies flottantes, puis `/ à propos` (texte + éditeur de code animé à onglets), `/ expérience` (onglets Telepac / TGR), `/ projets` (carrousel des stages + cartes) et contact (email copiable).
+- **Études de cas** (`/work/[slug]`) : double lecture Produit / Ingénierie (besoin, réalisations, écrans, parcours ; architecture interactive, choix techniques, améliorations envisagées).
+- **Animations** : entrée du titre, apparitions au scroll, étiquettes flottantes, éditeur qui s'écrit, maquettes animées. Tout respecte `prefers-reduced-motion`.
 
 Les maquettes de Skilo, XploreIA, TaskFlow et du reporting sont des illustrations ; le reporting affiche « données fictives ». Seules les captures du RAG sont réelles.
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
+import { Bodoni_Moda, DM_Sans } from "next/font/google";
 import { cookies } from "next/headers";
 import { SiteHeader } from "@/components/site-header";
 import { RevealObserver } from "@/components/reveal-observer";
@@ -9,22 +9,22 @@ import "./home.css";
 import "./visuals.css";
 import "./case.css";
 
-const display = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-display", display: "swap" });
-const sans = Geist({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
-const mono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono", display: "swap" });
+// Brief: Bodoni Moda for the name and a few titles, DM Sans for everything else.
+const bodoni = Bodoni_Moda({ subsets: ["latin"], variable: "--font-bodoni", display: "swap", style: ["normal", "italic"] });
+const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm", display: "swap" });
 
 export const metadata: Metadata = {
   title: { default: "Meriem Hamri · Software engineer", template: "%s · Meriem Hamri" },
-  description: "Meriem Hamri — ingénieure logiciel : IA locale (RAG) et applications full-stack.",
+  description: "Meriem Hamri, software engineer : applications web full-stack et outils d’IA locale.",
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const locale = await getLocale();
   const theme = (await cookies()).get("portfolio-theme")?.value === "dark" ? "dark" : "light";
   return (
-    <html lang={locale} data-theme={theme} className={`${display.variable} ${sans.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang={locale} data-theme={theme} className={`${bodoni.variable} ${dmSans.variable}`} suppressHydrationWarning>
       <head>
-        {/* Enables scroll reveals only when JavaScript runs, so content is never hidden without it. */}
+        {/* Scroll reveals only apply when JavaScript runs, so content is never hidden without it. */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
       </head>
       <body>

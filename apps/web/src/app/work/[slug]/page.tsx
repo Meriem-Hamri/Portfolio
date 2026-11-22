@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { CaseReading } from "@/components/case-reading";
+import { Iris } from "@/components/iris";
 import { ProjectArchitecture } from "@/components/project-architecture";
 import { ProjectVisual } from "@/components/project-visual";
 import { RagGallery } from "@/components/rag-gallery";
@@ -22,6 +24,13 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
   return project ? { title: project.title, description: project.summary } : { title: pick(locale, "Projet introuvable", "Project not found") };
 }
 
+function Row({ label, children, wide = false }: { label: string; children: React.ReactNode; wide?: boolean }) {
+  return <section className={`cs-row ${wide ? "cs-row--wide" : ""}`}>
+    <h2 className="cs-row__label" data-reveal>{label}</h2>
+    <div className="cs-row__body" data-reveal style={{ "--d": 1 } as React.CSSProperties}>{children}</div>
+  </section>;
+}
+
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { slug } = await params;
   const locale = await getLocale();
@@ -31,104 +40,81 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const index = projects.findIndex(item => item.slug === slug);
   const next = projects[(index + 1) % projects.length];
   const fr = locale === "fr";
-  let n = 0;
-  const num = () => `(${String(++n).padStart(2, "0")})`;
 
   const facts = [
     { label: fr ? "Rôle" : "Role", value: project.role },
     { label: fr ? "Période" : "Period", value: project.period },
     { label: fr ? "Contexte" : "Context", value: project.organization ?? (project.kind === "personal" ? (fr ? "Projet personnel" : "Personal project") : (fr ? "Projet d’équipe" : "Team project")) },
-    { label: fr ? "Équipe" : "Team", value: project.credit },
+    { label: fr ? "Collaboration" : "Collaboration", value: project.credit },
   ].filter((fact): fact is { label: string; value: string } => Boolean(fact.value));
 
-  return <article className={`case case--${project.color}`}>
-    {/* Hero */}
-    <header className="case__hero">
-      <div className="shell">
-        <Link className="case__back" href="/#projets"><span aria-hidden="true">←</span> {fr ? "Tous les projets" : "All projects"}</Link>
-        <p className="case__tag" data-hero-fade>{String(index + 1).padStart(2, "0")} — {project.tag}</p>
-        <h1 className="case__title display">
-          <span className="line"><span style={{ "--l": 0 } as React.CSSProperties}>{project.title}</span></span>
-        </h1>
-        <p className="case__pitch" data-hero-fade style={{ "--d": 1 } as React.CSSProperties}>{project.pitch}</p>
-        <dl className="case__facts" data-hero-fade style={{ "--d": 2 } as React.CSSProperties}>
-          {facts.map(fact => <div key={fact.label}><dt>{fact.label}</dt><dd>{fact.value}</dd></div>)}
-          <div><dt>Stack</dt><dd>{project.stack.join(", ")}</dd></div>
-        </dl>
+  const product = <div className="shell">
+    <Row label={fr ? "Le besoin" : "The need"}><p className="cs-lead">{project.problem}</p></Row>
+    <Row label={fr ? "Ce que j’ai réalisé" : "What I built"}>
+      <p>{project.solution}</p>
+      <ol className="cs-list">{project.highlights.map((item, i) => <li key={item}><span>{String(i + 1).padStart(2, "0")}</span>{item}</li>)}</ol>
+    </Row>
+    {project.visual === "rag" && <Row label={fr ? "Les écrans" : "The screens"} wide><RagGallery locale={locale} /></Row>}
+    {project.flow.length > 0 && <Row label={fr ? "Le parcours" : "The journey"} wide>
+      <ol className="cs-flow">{project.flow.map((step, i) => <li key={step}><span>{String(i + 1).padStart(2, "0")}</span>{step}</li>)}</ol>
+    </Row>}
+  </div>;
+
+  const engineering = <div className="shell">
+    <Row label="Architecture" wide><ProjectArchitecture slug={project.slug} locale={locale} /></Row>
+    {project.decisions.length > 0 && <Row label={fr ? "Choix techniques" : "Technical choices"} wide>
+      <div className="cs-decisions">{project.decisions.map(decision => <div key={decision.technology} className="cs-decision">
+        <p className="cs-decision__tech">{decision.technology}</p>
+        <h3>{decision.title}</h3>
+        <p>{decision.body}</p>
+        <p className="cs-decision__watch"><strong>{fr ? "Point de vigilance" : "Watch point"}</strong> {decision.watch}</p>
+      </div>)}</div>
+    </Row>}
+    <Row label={fr ? "Améliorations envisagées" : "Next improvements"}>
+      <ul className="cs-list cs-list--plain">{project.nextSteps.map(item => <li key={item}>{item}</li>)}</ul>
+    </Row>
+    <Row label="Stack"><p className="cs-stack">{project.stack.join(" / ")}</p>
+      {project.repositoryUrl && <p><a className="link link--accent" href={project.repositoryUrl} target="_blank" rel="noreferrer">{fr ? "Voir le code source" : "View the source code"} <span className="arrow arrow--out" aria-hidden="true">↗</span><span className="sr-only">{fr ? " (nouvel onglet)" : " (new tab)"}</span></a></p>}
+    </Row>
+  </div>;
+
+  return <article className={`case tone-${project.tone}`}>
+    <header className="shell case__head">
+      <div className="case__intro">
+        <Link className="link link--quiet case__back" href="/#projets"><span className="arrow" aria-hidden="true">←</span> {fr ? "Tous les projets" : "All projects"}</Link>
+        <p className="kicker" data-enter>{project.tag}{project.year ? ` · ${project.year}` : ""}</p>
+        <h1 className="case__title title lines"><span className="line"><span>{project.title}</span></span></h1>
+        <p className="case__headline" data-enter style={{ "--d": 1 } as React.CSSProperties}><span>{project.headline[0]}</span> <span>{project.headline[1]}</span></p>
+        <p className="case__summary" data-enter style={{ "--d": 2 } as React.CSSProperties}>{project.summary}</p>
       </div>
+      <aside className="case__card" data-enter style={{ "--d": 2 } as React.CSSProperties}>
+        <div className="case__number"><span className="kicker">{fr ? "Projet" : "Project"}</span><span className="title">{String(index + 1).padStart(2, "0")}</span></div>
+        <dl className="case__facts">{facts.map(fact => <div key={fact.label}><dt>{fact.label}</dt><dd>{fact.value}</dd></div>)}</dl>
+        <span className="case__card-strip" aria-hidden="true"><i /></span>
+      </aside>
     </header>
 
-    <div className="shell case__visual" data-hero-fade style={{ "--d": 3 } as React.CSSProperties}>
-      <ProjectVisual kind={project.visual} locale={locale} large />
+    <div className="shell">
+      <div className="case__stage" data-enter style={{ "--d": 3 } as React.CSSProperties}>
+        <Iris><span className="case__stage-inner"><ProjectVisual kind={project.visual} locale={locale} large /></span></Iris>
+      </div>
     </div>
 
-    {/* Problem */}
-    <section className="shell case__section" aria-labelledby="problem-title">
-      <div className="case__label" data-reveal><p className="eyebrow">{num()}</p><h2 id="problem-title">{fr ? "Le problème" : "The problem"}</h2></div>
-      <p className="case__lead" data-reveal>{project.problem}</p>
-    </section>
+    <CaseReading product={product} engineering={engineering} labels={{
+      group: fr ? "Lecture de l’étude de cas" : "Case study reading",
+      product: fr ? "Produit" : "Product",
+      engineering: fr ? "Ingénierie" : "Engineering",
+      productHint: fr ? "Besoin, fonctionnalités, écrans" : "Need, features, screens",
+      engineeringHint: fr ? "Architecture, choix, suites" : "Architecture, choices, next steps",
+    }} />
 
-    {/* Solution + highlights */}
-    <section className="shell case__section" aria-labelledby="solution-title">
-      <div className="case__label" data-reveal><p className="eyebrow">{num()}</p><h2 id="solution-title">{fr ? "Ce que j’ai construit" : "What I built"}</h2></div>
-      <div>
-        <p className="case__lead" data-reveal>{project.solution}</p>
-        <ol className="case__highlights">
-          {project.highlights.map((item, i) => <li key={item} data-reveal style={{ "--d": i } as React.CSSProperties}><span>{String(i + 1).padStart(2, "0")}</span>{item}</li>)}
-        </ol>
-      </div>
-    </section>
-
-    {project.visual === "rag" && <section className="shell case__section case__section--wide" aria-labelledby="screens-title">
-      <div className="case__label" data-reveal><p className="eyebrow">{num()}</p><h2 id="screens-title">{fr ? "L’application, en vrai" : "The real application"}</h2></div>
-      <RagGallery locale={locale} />
-    </section>}
-
-    {/* Flow */}
-    {project.flow.length > 0 && <section className="case__flow" aria-labelledby="flow-title">
-      <div className="shell">
-        <div className="case__label" data-reveal><p className="eyebrow">{num()}</p><h2 id="flow-title">{fr ? "Comment ça marche" : "How it works"}</h2></div>
-        <ol className="flow">
-          {project.flow.map((step, i) => <li key={step} data-reveal style={{ "--d": i } as React.CSSProperties}><span>{String(i + 1).padStart(2, "0")}</span><strong>{step}</strong></li>)}
-        </ol>
-      </div>
-    </section>}
-
-    {/* Architecture */}
-    <section className="shell case__section case__section--wide" aria-labelledby="architecture-title">
-      <div className="case__label" data-reveal><p className="eyebrow">{num()}</p><h2 id="architecture-title">{fr ? "Architecture" : "Architecture"}</h2></div>
-      <div data-reveal><ProjectArchitecture slug={project.slug} locale={locale} /></div>
-    </section>
-
-    {/* Decisions */}
-    {project.decisions.length > 0 && <section className="shell case__section case__section--wide" aria-labelledby="decisions-title">
-      <div className="case__label" data-reveal><p className="eyebrow">{num()}</p><h2 id="decisions-title">{fr ? "Décisions techniques" : "Technical decisions"}</h2></div>
-      <div className="decisions">
-        {project.decisions.map((decision, i) => <div key={decision.technology} className="decision" data-reveal style={{ "--d": i } as React.CSSProperties}>
-          <p className="decision__tech">{decision.technology}</p>
-          <h3>{decision.title}</h3>
-          <p>{decision.body}</p>
-          <p className="decision__watch"><strong>{fr ? "Point d’attention" : "Watch out"}</strong>{decision.watch}</p>
-        </div>)}
-      </div>
-    </section>}
-
-    {/* Links */}
-    {(project.repositoryUrl || project.liveUrl) && <section className="shell case__cta" data-reveal>
-      <p>{fr ? "Envie de voir le code ?" : "Want to see the code?"}</p>
-      <div className="hero__actions">
-        {project.repositoryUrl && <a className="btn" href={project.repositoryUrl} target="_blank" rel="noreferrer">{fr ? "Voir sur GitHub" : "View on GitHub"} <span className="btn__icon btn__icon--up" aria-hidden="true">↗</span></a>}
-        {project.liveUrl && <a className="btn btn--ghost" href={project.liveUrl} target="_blank" rel="noreferrer">{fr ? "Ouvrir la démo" : "Open the demo"} <span className="btn__icon btn__icon--up" aria-hidden="true">↗</span></a>}
-      </div>
-    </section>}
-
-    {/* Next project */}
-    <Link href={`/work/${next.slug}`} className={`case__next case--${next.color}`}>
-      <span className="shell">
-        <span className="eyebrow">{fr ? "Projet suivant" : "Next project"}</span>
-        <span className="case__next-title display">{next.title} <span aria-hidden="true">→</span></span>
-        <span className="case__next-pitch">{next.pitch}</span>
+    <Link href={`/work/${next.slug}`} className={`case__next tone-${next.tone}`}>
+      <span className="shell case__next-inner">
+        <span className="kicker">{fr ? "Projet suivant" : "Next project"}</span>
+        <span className="case__next-title title">{next.title} <span className="arrow" aria-hidden="true">→</span></span>
+        <span className="case__next-line">{next.headline[0]} {next.headline[1]}</span>
       </span>
+      <span className="case__next-strip" aria-hidden="true" />
     </Link>
     <SiteFooter locale={locale} />
   </article>;

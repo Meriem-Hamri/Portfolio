@@ -1,32 +1,31 @@
 .architecture { color: var(--ink); }
 .instructions { margin: 0 0 1rem; color: var(--muted); font-size: 1rem; }
-.diagram { position: relative; display: grid; grid-template-columns: 24% 24% 27%; justify-content: space-between; align-items: center; min-height: 390px; padding-block: 1rem; }
+.diagram { position: relative; display: grid; grid-template-columns: 24% 24% 27%; justify-content: space-between; align-items: center; min-height: 380px; padding-block: 1rem; }
 .wires { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
-.wires path { fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 1; opacity: .3; vector-effect: non-scaling-stroke; transition: opacity .3s; }
-.wires path[data-active="true"] { opacity: 1; stroke: var(--c, var(--blue)); stroke-width: 3; }
-.node { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: start; justify-content: center; gap: .45rem; width: 100%; min-height: 100px; padding: 1.1rem 2.5rem 1.1rem 1.2rem; text-align: left; color: inherit; border: 1.5px solid var(--line); border-radius: var(--radius); background: var(--card); cursor: pointer; transition: border-color .2s, transform .35s var(--ease-out), background-color .2s, color .2s; }
-.node > span:first-child { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
-.node strong { font-family: var(--font-display); font-size: clamp(1.05rem, 1.6vw, 1.4rem); font-weight: 700; line-height: 1.15; letter-spacing: -.03em; }
-.nodeAction { position: absolute; right: .9rem; top: 50%; transform: translateY(-50%); font-size: 1.3rem; }
-.node[aria-pressed="true"] { border-color: var(--c, var(--blue)); background: var(--c, var(--blue)); color: var(--on, #fff); }
-.node[aria-pressed="true"] > span:first-child { color: inherit; opacity: .75; }
-.node:hover { transform: translateY(-3px); border-color: var(--ink); }
+.wires path { fill: none; stroke: var(--ink); stroke-width: 1; stroke-dasharray: 1; opacity: .35; vector-effect: non-scaling-stroke; transition: opacity .25s; }
+.wires path[data-active="true"] { opacity: 1; stroke: var(--terracotta); stroke-width: 2; }
+.node { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: start; justify-content: center; gap: .4rem; width: 100%; min-height: 96px; padding: 1rem 2.4rem 1rem 1.1rem; text-align: left; color: inherit; border: 1px solid var(--ink); background: var(--page); cursor: pointer; transition: background-color .2s, color .2s, transform .25s var(--ease); }
+.node > span:first-child { font-size: .75rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.node strong { font-family: var(--font-title); font-size: clamp(1.1rem, 1.6vw, 1.4rem); font-weight: 400; line-height: 1.15; }
+.nodeAction { position: absolute; right: .9rem; top: 50%; transform: translateY(-50%); font-size: 1.2rem; }
+.node[aria-pressed="true"] { background: var(--deep, var(--brown)); border-color: var(--deep, var(--brown)); color: var(--cream); }
+.node[aria-pressed="true"] > span:first-child { color: var(--support, var(--olive-soft)); }
+.node:hover { transform: translateY(-2px); }
 .client { grid-column: 1; }
 .api { grid-column: 2; }
 .services { display: grid; align-content: space-around; gap: 1rem; align-self: stretch; grid-column: 3; }
-.diagram[data-branches="0"] { grid-template-columns: 36% 36%; justify-content: space-around; min-height: 210px; }
+.diagram[data-branches="0"] { grid-template-columns: 36% 36%; justify-content: space-around; min-height: 200px; }
 .diagram[data-branches="0"] .services { display: none; }
-.detail { display: grid; grid-template-columns: 1fr 2fr; gap: 2.5rem; margin-top: 1rem; padding: 1.75rem; border-radius: var(--radius); background: var(--bg-2); }
-.detail > div:first-child p { margin: 0 0 .4rem; font-family: var(--font-mono); font-size: .75rem; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
-.detail h3 { margin: 0; font-family: var(--font-display); font-size: clamp(1.5rem, 2.4vw, 2.2rem); letter-spacing: -.04em; line-height: 1.05; font-weight: 700; }
-.detail > div:last-child p { margin: 0; font-size: 1.05rem; line-height: 1.65; color: var(--ink-2); }
-.detail > div:last-child .responsibility { margin-top: .9rem; color: var(--muted); font-size: .95rem; }
-.note { margin: 1rem 0 0; color: var(--muted); font-size: .85rem; }
+.detail { display: grid; grid-template-columns: 1fr 2fr; gap: 2.5rem; margin-top: 1rem; padding: 1.5rem 1.75rem; background: var(--surface, var(--olive-soft)); color: var(--deep, var(--brown)); }
+.detail > div:first-child p { margin: 0 0 .4rem; font-size: .75rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; opacity: .75; }
+.detail h3 { margin: 0; font-family: var(--font-title); font-size: clamp(1.5rem, 2.4vw, 2.1rem); font-weight: 400; line-height: 1.05; }
+.detail > div:last-child p { margin: 0; line-height: 1.65; }
+.detail > div:last-child .responsibility { margin-top: .8rem; font-size: .95rem; opacity: .82; }
+.note { margin: 1rem 0 0; color: var(--muted); font-size: .875rem; }
 @media (max-width: 650px) {
-  .diagram, .diagram[data-branches="0"] { display: flex; flex-direction: column; align-items: stretch; min-height: 0; gap: 1.25rem; padding-block: 1rem; }
+  .diagram, .diagram[data-branches="0"] { display: flex; flex-direction: column; align-items: stretch; min-height: 0; gap: 1rem; padding-block: 1rem; }
   .wires { display: none; }
-  .node { min-height: 84px; }
-  .services { display: grid; gap: 1rem; padding-left: 1.25rem; margin-left: 1.25rem; border-left: 1.5px solid var(--line); }
+  .services { display: grid; gap: 1rem; padding-left: 1.25rem; margin-left: 1.25rem; border-left: 1px solid var(--ink); }
   .detail { grid-template-columns: 1fr; gap: 1rem; padding: 1.25rem; }
 }
 @media (prefers-reduced-motion: reduce) { .node { transition: none; } .node:hover { transform: none; } }

@@ -16,7 +16,6 @@ export function CopyEmail({ email, locale }: { email: string; locale: Locale }) 
     }
   }
   return <button type="button" className="copy" data-copied={copied} onClick={copy}>
-    <span aria-hidden="true">{copied ? "✓" : "⧉"}</span>
-    <span role="status">{copied ? (fr ? "Copié !" : "Copied!") : (fr ? "Copier" : "Copy")}</span>
+    <span role="status">{copied ? (fr ? "Adresse copiée" : "Address copied") : (fr ? "Copier l’adresse" : "Copy address")}</span>
   </button>;
 }

@@ -1,4 +1,8 @@
-export type ProjectColor = "blue" | "orange" | "lime" | "violet" | "pink";
+/**
+ * Colour pairing used by a project's compositions, always taken from the
+ * validated palette: dominant surface + deep tone (text/structure).
+ */
+export type ProjectTone = "olive" | "terracotta" | "sable" | "blush" | "sauge";
 export type ProjectVisualKind = "rag" | "reporting" | "skilo" | "taskflow" | "xplore";
 
 export type EngineeringDecision = {
@@ -12,20 +16,18 @@ export type Project = {
   slug: string;
   kind: "internship" | "collaboration" | "personal";
   title: string;
-  /** Short label shown above the title: "Stage · Telepac Technology". */
+  /** Short context label: "Stage · Telepac Technology". */
   tag: string;
   organization: string | null;
   period: string | null;
   year: string | null;
-  color: ProjectColor;
+  tone: ProjectTone;
   visual: ProjectVisualKind;
-  /** One punchy line that sells the project. */
-  pitch: string;
+  /** Two factual lines: what the product lets people do. */
+  headline: readonly [string, string];
   summary: string;
   role: string | null;
-  /** Three key facts shown as chips. */
-  badges: readonly string[];
-  /** What I built, as concrete bullet points. */
+  /** What I built, as concrete points. */
   highlights: readonly string[];
   stack: readonly string[];
   repositoryUrl: string | null;
@@ -34,6 +36,8 @@ export type Project = {
   solution: string;
   flow: readonly string[];
   decisions: readonly EngineeringDecision[];
-  /** Optional credit line, e.g. a collaborator. */
+  /** Improvements considered next (engineering reading). */
+  nextSteps: readonly string[];
+  /** Collaborators, with names verified by Meriem. */
   credit: string | null;
 };
